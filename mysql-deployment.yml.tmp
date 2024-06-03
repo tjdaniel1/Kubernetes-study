@@ -1,0 +1,26 @@
+# mysql-deployment.yml
+#3개 띄울것
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-deploy
+spec:
+  selector:
+    matchLabels:
+      app: mysql-pod
+  replicas: 1
+
+  template:
+    metadata:
+      labels:
+        app: mysql-pod
+    spec:
+      containers:
+        - name: mysql-con
+          image: mysql:latest
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "1234"

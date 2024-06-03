@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server-deploy
+spec:
+  selector:
+    matchLabels:
+      app: server
+  replicas: 3
+
+  template:
+    metadata:
+      name: server-pod
+      labels:
+        app: server
+    spec:
+      containers:
+        - name: server-con
+          image: jinseok351/spring-test:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: profiles
+              value: prod
+            - name: username
+              value: root
+            - name: password
+              value: "1234"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: server-service
+spec:
+  selector:
+    app: server
+  ports:
+    - port: 8080
+      targetPort: 8080
+  type: NodePort

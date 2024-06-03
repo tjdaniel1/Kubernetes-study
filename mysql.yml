@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-deploy
+spec:
+  selector:
+    #selctor, label이랑 맞춰야함
+    matchLabels:
+      app: mysql-pod
+  replicas: 1
+
+  template:
+    metadata:
+      labels:
+        app: mysql-pod
+    spec:
+      containers:
+        - name: mysql-con
+          image: mysql:latest
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "1234"
+            - name: MYSQL_DATABASE
+              value: auth_test
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  #spring mysql1루트랑 동일하게 설정
+  name: mysql1
+spec:
+  selector:
+    #맞춰야되는곳 여기
+    app: mysql-pod
+  ports:
+    - port: 3306
+      targetPort: 3306
+  type: NodePort
