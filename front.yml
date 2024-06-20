@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-deploy
+  name: front-deploy
 spec:
   selector:
     matchLabels:
-      app: nginx
+      app: front
   replicas: 3
 
   template:
     metadata:
-      name: nginx-pod
+      name: front-pod
       labels:
-        app: nginx
+        app: front
     spec:
       containers:
-        - name: nginx-con
-          image: nginx:latest
+        - name: front-con
+          image: jinseok351/front:latest
           ports:
             - containerPort: 80
 
@@ -24,11 +24,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx-service
+  name: front-service
 spec:
   selector:
-    app: nginx
+    app: front
   ports:
     - port: 80
       targetPort: 80
-  type: NodePort
+  type: LoadBalancer

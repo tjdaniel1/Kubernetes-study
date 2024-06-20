@@ -17,6 +17,10 @@ spec:
       containers:
         - name: server-con
           image: jinseok351/spring-test:latest
+          resources:
+            limits:
+              cpu: 500m
+              memory: 500Mi
           ports:
             - containerPort: 8080
           env:
@@ -39,3 +43,22 @@ spec:
     - port: 8080
       targetPort: 8080
   type: NodePort
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: server-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: server-deploy
+  minReplicas: 3
+  maxReplicas: 5
+  metrics:
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 40
